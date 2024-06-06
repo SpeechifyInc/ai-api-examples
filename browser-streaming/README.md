@@ -25,3 +25,10 @@ The example is written in JavaScript and intentionally kept simple to focus on t
 - A Speechify AI API token. You can get one by signing up at [Speechify AI API Console](https://console.sws.speechify.com/).
 
 ## Running The Example Locally
+
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Create a file named `.env` and set the `SPEECHIFY_API_KEY` environment variable to your Speechify AI API token: `SPEECHIFY_API_KEY=your-api-key`
+4. Build the client: `npm run build`
+5. Start the server: `npm start`
+6. Open the browser at `http://localhost:3000`
