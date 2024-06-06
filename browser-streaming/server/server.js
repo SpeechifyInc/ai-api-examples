@@ -1,10 +1,12 @@
 import path from "node:path";
 import express from "express";
+import cookieParser from "cookie-parser";
 
-import { login } from "./auth.js";
+import { login, logout, getUserFromSession } from "./auth.js";
 
 const app = express();
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.static(path.resolve(import.meta.dirname, "../client/dist")));
 
