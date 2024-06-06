@@ -6,11 +6,12 @@ import { login, logout, getUserFromSession } from "./auth.js";
 
 const app = express();
 
-app.use(cookieParser());
+app.use(cookieParser("secret"));
 app.use(express.json());
 app.use(express.static(path.resolve(import.meta.dirname, "../client/dist")));
 
 app.post("/auth/login", (req, res) => {
+	console.log(req.body);
 	const { username, password } = req.body;
 	const loginResponse = login(username, password);
 	if (loginResponse) {
