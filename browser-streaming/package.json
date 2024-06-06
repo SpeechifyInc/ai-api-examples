@@ -7,7 +7,7 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "node server/server.js",
-		"dev:start": "nodemon server/server.js",
+		"dev:start": "nodemon server/server.js -w server",
 		"build": "vite build",
 		"dev:build": "vite build --watch",
 		"dev": "run-p dev:*"

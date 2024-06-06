@@ -8,6 +8,7 @@ async function checkAuth() {
 
 const loginView = document.querySelector("#login-view");
 const loginForm = document.querySelector("#login-form");
+const logoutForm = document.querySelector("#logout-form");
 const mainView = document.querySelector("#main-view");
 
 function toggleView(view) {
@@ -31,6 +32,16 @@ function init() {
 		});
 		if (res.status === 200) {
 			toggleView(mainView);
+		}
+	});
+
+	logoutForm.addEventListener("submit", async (e) => {
+		e.preventDefault();
+		const res = await fetch("/auth/logout", {
+			method: "POST",
+		});
+		if (res.status === 200) {
+			toggleView(loginView);
 		}
 	});
 
