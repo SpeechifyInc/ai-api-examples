@@ -28,7 +28,7 @@ The example is written in JavaScript and intentionally kept simple to focus on t
 
 1. Clone the repository
 2. Install dependencies: `npm install`
-3. Create a file named `.env` and set the `SPEECHIFY_API_KEY` environment variable to your Speechify AI API token: `SPEECHIFY_API_KEY=your-api-key`
+3. In this folder, create a file named `.env` and set the `SPEECHIFY_API_KEY` environment variable to your Speechify AI API token: `SPEECHIFY_API_KEY=your-api-key`
 4. Build the client: `npm run build`
 5. Start the server: `npm start`
 6. Open the browser at `http://localhost:4040`
