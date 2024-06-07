@@ -1,10 +1,12 @@
-import { checkAuth, login, logout } from "./auth.js";
+import { checkAuth, login, logout, getAuthToken } from "./auth.js";
 
 const loginView = document.querySelector("#login-view");
 const loginForm = document.querySelector("#login-form");
 const logoutForm = document.querySelector("#logout-form");
 const mainView = document.querySelector("#main-view");
 const usernameView = document.querySelector("#username-view");
+const ttsForm = document.querySelector("#tts-form");
+const audioPlayer = document.querySelector("#audio-player");
 
 function toggleView(auth) {
 	loginView.classList.add("hidden");
@@ -14,6 +16,86 @@ function toggleView(auth) {
 		usernameView.textContent = auth.username;
 	} else {
 		loginView.classList.remove("hidden");
+	}
+}
+
+function getAudioStream(inputText) {
+	const speechifyHost =
+		import.meta.env.VITE_SPEECHIFY_API || "https://api.sws.speechify.com";
+	const speechifyAuthToken = getAuthToken();
+
+	if (!speechifyAuthToken) {
+		console.error("Unauthorized");
+		return;
+	}
+
+	return fetch(`${speechifyHost}/v1/audio/stream`, {
+		method: "POST",
+		headers: {
+			Authorization: `Bearer ${speechifyAuthToken}`,
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			input: inputText,
+			audio_format: "mp3",
+			voice_id: "cliff",
+		}),
+	});
+}
+
+const mediaSource = new MediaSource();
+audioPlayer.src = URL.createObjectURL(mediaSource);
+let sourceBuffer;
+
+async function playAudioStream(inputText) {
+	if (!sourceBuffer) {
+		sourceBuffer = mediaSource.addSourceBuffer("audio/mpeg");
+	}
+
+	const audioStreamRes = await getAudioStream(inputText);
+	if (!audioStreamRes.ok) {
+		console.error("Network response was not ok");
+		return;
+	}
+	if (!audioStreamRes.body) {
+		console.error("Response body is null");
+		return;
+	}
+
+	const reader = audioStreamRes.body.getReader();
+	let isFirstChunk = true;
+	while (true) {
+		const { done, value } = await reader.read();
+
+		if (isFirstChunk) {
+			isFirstChunk = false;
+			audioPlayer.classList.remove("hidden");
+			audioPlayer.play();
+		}
+
+		if (value) {
+			sourceBuffer.appendBuffer(value);
+		}
+		if (done) {
+			break;
+		}
+	}
+}
+
+async function runTextToSpeech() {
+	const formData = new FormData(ttsForm);
+	const inputText = formData.get("input");
+
+	if (!inputText) {
+		return;
+	}
+
+	if (mediaSource.readyState === "open") {
+		playAudioStream(inputText);
+	} else {
+		mediaSource.addEventListener("sourceopen", async () => {
+			playAudioStream(inputText);
+		});
 	}
 }
 
@@ -40,6 +122,12 @@ function init() {
 
 	checkAuth().then((auth) => {
 		toggleView(auth);
+	});
+
+	ttsForm.addEventListener("submit", async (e) => {
+		e.preventDefault();
+
+		runTextToSpeech();
 	});
 }
 
