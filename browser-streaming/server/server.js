@@ -10,6 +10,8 @@ app.use(cookieParser("secret"));
 app.use(express.json());
 app.use(express.static(path.resolve(import.meta.dirname, "../client/dist")));
 
+// AUTHENTICATION ROUTES
+
 app.post("/auth/login", (req, res) => {
 	console.log(req.body);
 	const { username, password } = req.body;
@@ -42,9 +44,13 @@ app.get("/auth/me", (req, res) => {
 	}
 });
 
+// MAIN ROUTE
+
 app.get("/", (req, res) => {
 	res.sendFile("index.html");
 });
+
+// START SERVER
 
 const port = Number.parseInt(process.env.PORT || 4040);
 app.listen(port, () => {

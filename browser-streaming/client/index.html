@@ -34,7 +34,7 @@
 					<span class="w-[100px]"></span>
 					<button
 						type="submit"
-						class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+						class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
 					>
 						Login
 					</button>
@@ -43,14 +43,17 @@
 		</div>
 
 		<div id="main-view" class="hidden">
-			<form id="logout-form">
-				<button
-					type="submit"
-					class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-				>
-					Logout
-				</button>
-			</form>
+			<div class="flex gap-2 items-center justify-end">
+				<p>Hello, <span id="username-view"></span></p>
+				<form id="logout-form">
+					<button
+						type="submit"
+						class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+					>
+						Logout
+					</button>
+				</form>
+			</div>
 		</div>
 
 		<script src="./index.js" type="module"></script>
