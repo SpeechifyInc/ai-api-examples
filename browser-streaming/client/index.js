@@ -1,5 +1,7 @@
 import { checkAuth, login, logout, getAuthToken } from "./auth.js";
 
+const AUDIO_MIME_TYPE = "audio/mpeg";
+
 const loginView = document.querySelector("#login-view");
 const loginForm = document.querySelector("#login-form");
 const logoutForm = document.querySelector("#logout-form");
@@ -34,10 +36,10 @@ function getAudioStream(inputText) {
 		headers: {
 			Authorization: `Bearer ${speechifyAuthToken}`,
 			"Content-Type": "application/json",
+			Accept: AUDIO_MIME_TYPE,
 		},
 		body: JSON.stringify({
 			input: inputText,
-			audio_format: "mp3",
 			voice_id: "cliff",
 		}),
 	});
@@ -49,7 +51,7 @@ let sourceBuffer;
 
 async function playAudioStream(inputText) {
 	if (!sourceBuffer) {
-		sourceBuffer = mediaSource.addSourceBuffer("audio/mpeg");
+		sourceBuffer = mediaSource.addSourceBuffer(AUDIO_MIME_TYPE);
 	}
 
 	const audioStreamRes = await getAudioStream(inputText);
@@ -67,18 +69,17 @@ async function playAudioStream(inputText) {
 	while (true) {
 		const { done, value } = await reader.read();
 
+		if (done) {
+			break;
+		}
+
 		if (isFirstChunk) {
 			isFirstChunk = false;
 			audioPlayer.classList.remove("hidden");
 			audioPlayer.play();
 		}
 
-		if (value) {
-			sourceBuffer.appendBuffer(value);
-		}
-		if (done) {
-			break;
-		}
+		sourceBuffer.appendBuffer(value);
 	}
 }
 
@@ -93,7 +94,7 @@ async function runTextToSpeech() {
 	if (mediaSource.readyState === "open") {
 		playAudioStream(inputText);
 	} else {
-		mediaSource.addEventListener("sourceopen", async () => {
+		mediaSource.addEventListener("sourceopen", () => {
 			playAudioStream(inputText);
 		});
 	}
