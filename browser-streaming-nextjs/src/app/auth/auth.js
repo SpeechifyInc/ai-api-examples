@@ -1,3 +1,7 @@
+// This module implements the authentication logic for the application,
+// using SQLite as a simple database to store session information.
+// It is for demonstration purposes only and should not be used in production.
+
 import Database from "better-sqlite3";
 
 const db = new Database("sessions.db");

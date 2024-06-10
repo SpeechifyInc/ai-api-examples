@@ -1,8 +1,10 @@
 import { useContext } from "react";
 
-import { AuthContext } from "@/lib/auth";
+import { AuthContext } from "@/lib/client/auth";
 
+// The logout form
 export function Logout() {
+	// Make use of the auth context to call the logout method
 	const { logout } = useContext(AuthContext);
 
 	return (

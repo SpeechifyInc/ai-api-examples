@@ -1,10 +1,12 @@
-import { AuthContext } from "@/lib/auth";
+import { AuthContext } from "@/lib/client/auth";
 import { useContext, useState } from "react";
 
+// The login form
 export function Login() {
 	const [username, setUsername] = useState("marco");
 	const [password, setPassword] = useState("polo");
 
+	// Make use of the auth context to call the login method
 	const { login } = useContext(AuthContext);
 
 	return (

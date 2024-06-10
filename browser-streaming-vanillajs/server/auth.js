@@ -1,3 +1,6 @@
+// This module implements the trivial mock authentication logic for the server.
+// It is for demonstration purposes only and should not be used in production.
+
 const sessionStorage = new Map();
 
 export function login(username, password) {

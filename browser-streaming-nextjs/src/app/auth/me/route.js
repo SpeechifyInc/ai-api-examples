@@ -6,7 +6,7 @@ import { getUserFromSession } from "../auth";
 export async function GET() {
 	const cookieStore = cookies();
 
-	const user = getUserFromSession(cookieStore.get("sessionId").value);
+	const user = getUserFromSession(cookieStore.get("sessionId")?.value);
 
 	if (user) {
 		return NextResponse.json({ username: user });
