@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Browser Streaming Example with Next.js
 
-## Getting Started
+This example demonstrates how to use the Speechify AI API to stream text-to-speech audio natively in the browser in the Next.js app.
 
-First, run the development server:
+This is the minimal demo covering all of the core topics:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- usage of the API Key to issue the user access token
+- usage of the user access token to authenticate the public-client (in-browser code) with the API
+- regular updates of the user access token
+- usage of the Speechify AI API to convert text to speech
+- streaming the audio in the browser
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The example is written in JavaScript and intentionally kept simple to focus on the core topics. It uses:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- Next.js for the server and the client
+- end-user authentication with the SQLite back-end
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Prerequisites
 
-## Learn More
+- Node.js 18+,
+- npm 8+,
+- A Speechify AI API token. You can get one by signing up at [Speechify AI API Console](https://console.sws.speechify.com/).
 
-To learn more about Next.js, take a look at the following resources:
+## Running The Example Locally
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. In this folder, create a file named `.env` and set the `SPEECHIFY_API_KEY` environment variable to your Speechify AI API token: `SPEECHIFY_API_KEY=your-api-key`
+4. Build the client: `npm run build`
+5. Start the server: `npm start`
+6. Open the browser at `http://localhost:4040`
