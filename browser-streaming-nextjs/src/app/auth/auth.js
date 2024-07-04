@@ -19,7 +19,7 @@ const deleteSessionStatement = db.prepare(
 	"DELETE FROM sessions WHERE sessionId = ?;"
 );
 
-export function login(username, password) {
+export async function login(username, password) {
 	if (username === "marco" && password === "polo") {
 		const sessionId = Math.random().toString(36).slice(2);
 		if (insertSessionStatement.run(sessionId, username).changes === 1) {
@@ -29,10 +29,10 @@ export function login(username, password) {
 	return null;
 }
 
-export function getUserFromSession(sessionId) {
+export async function getUserFromSession(sessionId) {
 	return getSessionStatement.get(sessionId)?.username;
 }
 
-export function logout(sessionId) {
+export async function logout(sessionId) {
 	return deleteSessionStatement.run(sessionId).changes === 1;
 }

@@ -13,7 +13,7 @@ export async function POST() {
 	const cookieStore = cookies();
 
 	// Ensure the user is authenticated
-	const user = getUserFromSession(cookieStore.get("sessionId")?.value);
+	const user = await getUserFromSession(cookieStore.get("sessionId")?.value);
 	if (!user) {
 		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 	}
