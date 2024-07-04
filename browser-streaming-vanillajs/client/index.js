@@ -95,6 +95,9 @@ async function playAudioStream(inputText) {
 			break;
 		}
 
+		// Append the audio stream chunk to the source buffer
+		sourceBuffer.appendBuffer(value);
+
 		// Start playing the audio stream when the first chunk is received
 		if (isFirstChunk) {
 			isFirstChunk = false;
@@ -102,8 +105,10 @@ async function playAudioStream(inputText) {
 			audioPlayer.play();
 		}
 
-		// Append the audio stream chunk to the source buffer
-		sourceBuffer.appendBuffer(value);
+		// Wait for the source buffer to finish updating before appending the next chunk
+		await new Promise((resolve) => {
+			sourceBuffer.onupdateend = resolve;
+		});
 	}
 }
 
