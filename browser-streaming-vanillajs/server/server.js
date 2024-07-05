@@ -17,9 +17,9 @@ app.use(express.static(path.resolve(import.meta.dirname, "../client/dist")));
 // You MUST implement proper authentication and session management in a real application
 // to ensure the security of your users' data AND to protect your paid Speechify AI API usage.
 
-app.post("/auth/login", (req, res) => {
+app.post("/auth/login", async (req, res) => {
 	const { username, password } = req.body;
-	const loginResponse = login(username, password);
+	const loginResponse = await login(username, password);
 	if (loginResponse) {
 		res
 			.cookie("sessionId", loginResponse.sessionId, {
@@ -34,13 +34,13 @@ app.post("/auth/login", (req, res) => {
 	}
 });
 
-app.post("/auth/logout", (req, res) => {
-	logout(req.cookies.sessionId);
+app.post("/auth/logout", async (req, res) => {
+	await logout(req.cookies.sessionId);
 	res.clearCookie("sessionId").end();
 });
 
-app.get("/auth/me", (req, res) => {
-	const user = getUserFromSession(req.cookies.sessionId);
+app.get("/auth/me", async (req, res) => {
+	const user = await getUserFromSession(req.cookies.sessionId);
 	if (user) {
 		res.json({ username: user });
 	} else {
@@ -56,7 +56,7 @@ app.get("/auth/me", (req, res) => {
 
 app.post("/api/token", async (req, res) => {
 	// Ensure the user is authenticated
-	const user = getUserFromSession(req.cookies.sessionId);
+	const user = await getUserFromSession(req.cookies.sessionId);
 	if (!user) {
 		return res.status(401).json({ error: "Unauthorized" });
 	}

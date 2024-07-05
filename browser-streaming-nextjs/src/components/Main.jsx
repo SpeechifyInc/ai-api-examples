@@ -66,14 +66,19 @@ async function playAudioStream(
 			break;
 		}
 
+		// Append the audio stream chunk to the source buffer
+		sourceBuffer.appendBuffer(value);
+
 		// Start playing the audio stream when the first chunk is received
 		if (isFirstChunk) {
 			isFirstChunk = false;
 			audioPlayer.play();
 		}
 
-		// Append the audio stream chunk to the source buffer
-		sourceBuffer.appendBuffer(value);
+		// Wait for the source buffer to finish updating before appending the next chunk
+		await new Promise((resolve) => {
+			sourceBuffer.onupdateend = resolve;
+		});
 	}
 }
 
@@ -104,10 +109,7 @@ export function Main() {
 	const { user, authToken } = useContext(AuthContext);
 
 	const [input, setInput] = useState(
-		`The Best Text to Speech Converter. Listen up to 9x faster with
-Speechify’s ultra realistic text to speech software that lets you read
-faster than the average reading speed, without skipping out on the
-best AI voices.`
+		"The Best Text to Speech Converter. Listen up to 9x faster with Speechify’s ultra realistic text to speech software that lets you read faster than the average reading speed, without skipping out on the best AI voices."
 	);
 
 	const [showAudio, setShowAudio] = useState(false);

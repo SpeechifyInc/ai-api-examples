@@ -5,7 +5,7 @@ import { login } from "../auth";
 
 export async function POST(req) {
 	const { username, password } = await req.json();
-	const loginResponse = login(username, password);
+	const loginResponse = await login(username, password);
 
 	if (loginResponse) {
 		const response = NextResponse.json({ username: loginResponse.username });

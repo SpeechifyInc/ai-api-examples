@@ -6,7 +6,7 @@ import { logout } from "../auth";
 export async function POST() {
 	const cookieStore = cookies();
 
-	logout(cookieStore.get("sessionId")?.value);
+	await logout(cookieStore.get("sessionId")?.value);
 
 	const response = NextResponse.json({ success: true });
 	response.cookies.delete("sessionId");
