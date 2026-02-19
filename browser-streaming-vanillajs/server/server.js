@@ -84,7 +84,7 @@ app.post("/api/token", async (req, res) => {
 			grant_type: "client_credentials",
 			// Always use the minimal scope that is necessary for your application.
 			// For example, for the audio streaming it's "audio:stream"
-			scope: "audio:stream",
+			scope: "audio:stream audio:speech",
 		}).toString(),
 	});
 
