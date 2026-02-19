@@ -3,11 +3,8 @@ import { checkAuth, login, logout, getAuthToken, type AuthUser } from "./auth.js
 // The MIME type of the audio stream
 const AUDIO_MIME_TYPE = "audio/mpeg";
 
-// The stream and speech endpoints live on different hosts
-const streamHost =
-	import.meta.env.VITE_SPEECHIFY_API ?? "https://api.sws.speechify.com";
-const speechHost =
-	import.meta.env.VITE_SPEECHIFY_SPEECH_API ?? "https://api.speechify.ai";
+const apiHost =
+	import.meta.env.VITE_SPEECHIFY_API ?? "https://api.speechify.ai";
 
 // DOM elements to interact with
 const loginView = document.querySelector<HTMLDivElement>("#login-view")!;
@@ -74,7 +71,7 @@ async function playAudioStream(inputText: string): Promise<void> {
 	// https://developer.mozilla.org/en-US/docs/Web/API/SourceBuffer
 	const sourceBuffer = mediaSource.addSourceBuffer(AUDIO_MIME_TYPE);
 
-	const res = await fetch(`${streamHost}/v1/audio/stream`, {
+	const res = await fetch(`${apiHost}/v1/audio/stream`, {
 		method: "POST",
 		headers: { ...headers, Accept: AUDIO_MIME_TYPE },
 		body: JSON.stringify({ input: inputText, voice_id: "cliff" }),
@@ -129,7 +126,7 @@ async function playAudioSpeech(inputText: string): Promise<void> {
 		return;
 	}
 
-	const res = await fetch(`${speechHost}/v1/audio/speech`, {
+	const res = await fetch(`${apiHost}/v1/audio/speech`, {
 		method: "POST",
 		headers,
 		body: JSON.stringify({

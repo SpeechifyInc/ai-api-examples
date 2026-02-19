@@ -72,7 +72,7 @@ app.post("/api/token", async (req: Request, res: Response) => {
 	// You can ignore this line, unless you know that you want
 	// to use a different Speechify API host
 	const speechifyHost =
-		process.env.SPEECHIFY_API ?? "https://api.sws.speechify.com";
+		process.env.SPEECHIFY_API ?? "https://api.speechify.ai";
 	// Here, you should use the Speechify API Key that you obtained
 	// from the Speechify AI API dashboard
 	const speechifyApiKey = process.env.SPEECHIFY_API_KEY;
