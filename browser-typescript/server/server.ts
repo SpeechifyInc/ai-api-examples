@@ -1,7 +1,7 @@
 import "dotenv/config";
 
 import path from "node:path";
-import express from "express";
+import express, { type Request, type Response } from "express";
 import cookieParser from "cookie-parser";
 
 import { login, logout, getUserFromSession } from "./auth.js";
@@ -17,8 +17,11 @@ app.use(express.static(path.resolve(import.meta.dirname, "../client/dist")));
 // You MUST implement proper authentication and session management in a real application
 // to ensure the security of your users' data AND to protect your paid Speechify AI API usage.
 
-app.post("/auth/login", async (req, res) => {
-	const { username, password } = req.body;
+app.post("/auth/login", async (req: Request, res: Response) => {
+	const { username, password } = req.body as {
+		username: string;
+		password: string;
+	};
 	const loginResponse = await login(username, password);
 	if (loginResponse) {
 		res
@@ -34,13 +37,15 @@ app.post("/auth/login", async (req, res) => {
 	}
 });
 
-app.post("/auth/logout", async (req, res) => {
-	await logout(req.cookies.sessionId);
+app.post("/auth/logout", async (req: Request, res: Response) => {
+	await logout(req.cookies.sessionId as string | undefined);
 	res.clearCookie("sessionId").end();
 });
 
-app.get("/auth/me", async (req, res) => {
-	const user = await getUserFromSession(req.cookies.sessionId);
+app.get("/auth/me", async (req: Request, res: Response) => {
+	const user = await getUserFromSession(
+		req.cookies.sessionId as string | undefined
+	);
 	if (user) {
 		res.json({ username: user });
 	} else {
@@ -54,17 +59,20 @@ app.get("/auth/me", async (req, res) => {
 // The Speechify AI API Key should ONLY be exposed to the server code,
 // and the access tokens should only be issued to the authenticated users of your application.
 
-app.post("/api/token", async (req, res) => {
+app.post("/api/token", async (req: Request, res: Response) => {
 	// Ensure the user is authenticated
-	const user = await getUserFromSession(req.cookies.sessionId);
+	const user = await getUserFromSession(
+		req.cookies.sessionId as string | undefined
+	);
 	if (!user) {
-		return res.status(401).json({ error: "Unauthorized" });
+		res.status(401).json({ error: "Unauthorized" });
+		return;
 	}
 
 	// You can ignore this line, unless you know that you want
 	// to use a different Speechify API host
 	const speechifyHost =
-		process.env.SPEECHIFY_API || "https://api.sws.speechify.com";
+		process.env.SPEECHIFY_API ?? "https://api.sws.speechify.com";
 	// Here, you should use the Speechify API Key that you obtained
 	// from the Speechify AI API dashboard
 	const speechifyApiKey = process.env.SPEECHIFY_API_KEY;
@@ -90,25 +98,26 @@ app.post("/api/token", async (req, res) => {
 
 	if (apiRes.status !== 200) {
 		console.log(`Token error: ${await apiRes.text()}`);
-		return res.status(401).json({ error: "Unauthorized" });
+		res.status(401).json({ error: "Unauthorized" });
+		return;
 	}
 
 	// The API response contains several fields, you can send the whole response to the client
 	// but the most important one is the access_token field.
-	const tokenData = await apiRes.json();
+	const tokenData = (await apiRes.json()) as { access_token: string };
 	res.json({ token: tokenData.access_token });
 });
 
 // MAIN ROUTE
 // Here we serve the main page of the application
 
-app.get("/", (_req, res) => {
+app.get("/", (_req: Request, res: Response) => {
 	res.sendFile("index.html");
 });
 
 // START SERVER
 
-const port = Number.parseInt(process.env.PORT || 4040);
+const port = Number.parseInt(process.env.PORT ?? "4040");
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
 });
