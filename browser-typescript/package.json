@@ -4,10 +4,10 @@
 	"version": "1.0.0",
 	"description": "This example demonstrates how to use the Speechify AI API to stream text-to-speech audio natively in the browser.",
 	"type": "module",
-	"main": "server/server.ts",
+	"main": "server/index.ts",
 	"scripts": {
-		"start": "tsx server/server.ts",
-		"dev:start": "tsx watch server/server.ts",
+		"start": "tsx server/index.ts",
+		"dev:start": "tsx watch server/index.ts",
 		"build": "vite build",
 		"dev:build": "vite build --watch",
 		"dev": "run-p dev:*"

@@ -1,10 +1,7 @@
-import { checkAuth, login, logout, getAuthToken, type AuthUser } from "./auth.js";
+import { checkAuth, login, logout, type AuthUser } from "./auth.ts";
 
 // The MIME type of the audio stream
 const AUDIO_MIME_TYPE = "audio/mpeg";
-
-const apiHost =
-	import.meta.env.VITE_SPEECHIFY_API ?? "https://api.speechify.ai";
 
 // DOM elements to interact with
 const loginView = document.querySelector<HTMLDivElement>("#login-view")!;
@@ -39,26 +36,10 @@ function toggleView(auth: AuthUser | null): void {
 	}
 }
 
-function getAuthHeaders(): Record<string, string> | null {
-	const token = getAuthToken();
-	if (!token) return null;
-	return {
-		Authorization: `Bearer ${token}`,
-		"Content-Type": "application/json",
-	};
-}
-
 // Stream mode: audio arrives as a ReadableStream and is played incrementally
 // via the MediaSource Extensions API. A fresh MediaSource is created each call
 // so the player can be reused across multiple conversions.
 async function playAudioStream(inputText: string): Promise<void> {
-	const headers = getAuthHeaders();
-	if (!headers) {
-		console.error("Unauthorized");
-		setConverting(false);
-		return;
-	}
-
 	// Create a fresh MediaSource for each stream so repeated calls work
 	// https://developer.mozilla.org/en-US/docs/Web/API/MediaSource
 	const mediaSource = new MediaSource();
@@ -71,9 +52,9 @@ async function playAudioStream(inputText: string): Promise<void> {
 	// https://developer.mozilla.org/en-US/docs/Web/API/SourceBuffer
 	const sourceBuffer = mediaSource.addSourceBuffer(AUDIO_MIME_TYPE);
 
-	const res = await fetch(`${apiHost}/v1/audio/stream`, {
+	const res = await fetch("/api/audio/stream", {
 		method: "POST",
-		headers: { ...headers, Accept: AUDIO_MIME_TYPE },
+		headers: { "Content-Type": "application/json", Accept: AUDIO_MIME_TYPE },
 		body: JSON.stringify({ input: inputText, voice_id: "cliff" }),
 	});
 
@@ -119,16 +100,9 @@ async function playAudioStream(inputText: string): Promise<void> {
 // Speech mode: the full audio is returned as a base64-encoded string in a JSON
 // response. The audio is decoded and played once the entire response arrives.
 async function playAudioSpeech(inputText: string): Promise<void> {
-	const headers = getAuthHeaders();
-	if (!headers) {
-		console.error("Unauthorized");
-		setConverting(false);
-		return;
-	}
-
-	const res = await fetch(`${apiHost}/v1/audio/speech`, {
+	const res = await fetch("/api/audio/speech", {
 		method: "POST",
-		headers,
+		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify({
 			input: inputText,
 			voice_id: "cliff",
