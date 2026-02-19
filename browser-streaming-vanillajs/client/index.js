@@ -11,6 +11,17 @@ const mainView = document.querySelector("#main-view");
 const usernameView = document.querySelector("#username-view");
 const ttsForm = document.querySelector("#tts-form");
 const audioPlayer = document.querySelector("#audio-player");
+const ttsSubmit = document.querySelector("#tts-submit");
+const ttsPlayIcon = document.querySelector("#tts-play-icon");
+const ttsSpinner = document.querySelector("#tts-spinner");
+const ttsBtnLabel = document.querySelector("#tts-btn-label");
+
+function setConverting(loading) {
+	ttsSubmit.disabled = loading;
+	ttsPlayIcon.classList.toggle("hidden", loading);
+	ttsSpinner.classList.toggle("hidden", !loading);
+	ttsBtnLabel.textContent = loading ? "Converting..." : "Convert to speech";
+}
 
 // Function to toggle the view between login and main, based on the authentication status
 function toggleView(auth) {
@@ -78,10 +89,12 @@ async function playAudioStream(inputText) {
 	const audioStreamRes = await getAudioStream(inputText);
 	if (!audioStreamRes.ok) {
 		console.error("Network response was not ok");
+		setConverting(false);
 		return;
 	}
 	if (!audioStreamRes.body) {
 		console.error("Response body is null");
+		setConverting(false);
 		return;
 	}
 
@@ -101,6 +114,7 @@ async function playAudioStream(inputText) {
 		// Start playing the audio stream when the first chunk is received
 		if (isFirstChunk) {
 			isFirstChunk = false;
+			setConverting(false);
 			audioPlayer.classList.remove("hidden");
 			audioPlayer.play();
 		}
@@ -167,6 +181,7 @@ function init() {
 	ttsForm.addEventListener("submit", async (e) => {
 		e.preventDefault();
 
+		setConverting(true);
 		runTextToSpeech();
 	});
 }
