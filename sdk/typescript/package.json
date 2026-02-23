@@ -1,0 +1,21 @@
+{
+	"private": true,
+	"name": "speechify-browser-sdk",
+	"version": "1.0.0",
+	"description": "This example demonstrates how to use the Speechify AI API SDK to convert text to speech and save it as an audio file.",
+	"type": "module",
+	"main": "index.ts",
+	"scripts": {
+		"build": "tsx index.ts"
+	},
+	"license": "MIT",
+	"dependencies": {
+		"@speechify/api": "*",
+		"dotenv": "^16.4.5"
+	},
+	"devDependencies": {
+		"@types/node": "^22.0.0",
+		"tsx": "^4.19.0",
+		"typescript": "^5.6.0"
+	}
+}
