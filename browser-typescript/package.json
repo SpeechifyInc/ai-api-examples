@@ -12,7 +12,7 @@
 		"dev:build": "vite build --watch",
 		"dev": "run-p dev:*"
 	},
-	"author": "Eugene Mirotin <eugene.mirotin@speechify.com>",
+	"author": "SpeechifyAI <developers@speechify.ai>",
 	"license": "MIT",
 	"dependencies": {
 		"cookie-parser": "^1.4.6",
